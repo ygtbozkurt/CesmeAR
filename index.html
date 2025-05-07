@@ -3,53 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <title>AR.js Konum Tabanlı Demo</title>
-  <!-- A-Frame & AR.js Kütüphaneleri -->
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <!-- Güncel Kütüphane Versiyonları -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  
+  <!-- GPS Optimizasyon Scripti -->
+  <script>
+    AFRAME.registerComponent('gps-error-handler', {
+      init: function() {
+        this.el.addEventListener('gps-entity-place-error', (e) => {
+          alert(`GPS Error: ${e.detail.message}`);
+        });
+      }
+    });
+  </script>
 </head>
 <body>
   <a-scene 
-    vr-mode-ui="enabled: true" 
-    arjs="sourceType: webcam; debugUIEnabled: false" >
+    vr-mode-ui="enabled: false" 
+    arjs="sourceType: webcam; 
+          debugUIEnabled: false;
+          detectionMode: mono_and_matrix;
+          matrixCodeType: 3x3;"
+    renderer="logarithmicDepthBuffer: true; antialias: true;"
+  >
 
-    <!-- GPS Kamera -->
-    <a-camera gps-camera rotation-reader></a-camera>
+    <!-- Gelişmiş GPS Kamera Konfigürasyonu -->
+    <a-camera 
+      gps-camera 
+      rotation-reader 
+      gps-min-distance="5"
+      gps-max-distance="1000"
+      gps-error-handler
+      position-min-distance="0.1"
+      position-max-distance="100"
+    ></a-camera>
 
-    <!-- 3D Ağaç Modeli (home cube Koordinatları) -->
+    <!-- 3D Modeller için Optimize Edilmiş Yapı -->
     <a-entity
-      gltf-model="url(assets/test.glb)"
-      scale="25 25 25"
+      gltf-model="url: assets/test.glb;"
+      scale="5 5 5"
+      position="0 1.5 0"
       gps-entity-place="latitude: 38.311312; longitude: 26.413585;"
-    ></a-entity>
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
+      shadow="cast: true; receive: true"
+    >
+      <a-text 
+        value="3D Model 1" 
+        position="0 3 0"
+        color="#000000"
+        scale="2 2 2"
+      ></a-text>
+    </a-entity>
 
-    <!-- 2D İşaretleyici (erithrai Koordinatları) -->
+    <!-- 2D İşaretleyiciler için Gelişmiş Yapı -->
     <a-image
       src="assets/rickMorty.png"
-      width="15"
-      height="15"
+      width="5"
+      height="5"
+      position="0 2 0"
+      look-at="[camera]"
       gps-entity-place="latitude: 38.311002; longitude: 26.413483;"
-    ></a-image>
+      animation="property: position; from: 0 1 0; to: 0 2.5 0; dir: alternate; loop: true; dur: 2000"
+      gps-error-handler
+    >
+      <a-plane
+        color="rgba(0,150,200,0.3)"
+        width="6"
+        height="6"
+        position="0 -0.5 0"
+      ></a-plane>
+    </a-image>
 
+    <!-- Diğer Konumlar için Benzer Yapılar -->
     <a-entity
-      gltf-model="url(assets/test.glb)"
-      scale="25 25 25"
+      gltf-model="url: assets/test.glb;"
+      scale="5 5 5"
+      position="0 1.5 0"
       gps-entity-place="latitude: 40.8297; longitude: 29.3135;"
+      shadow="cast: true; receive: true"
+      gps-error-handler
     ></a-entity>
-
 
     <a-image
       src="assets/rickMorty.png"
-      width="15"
-      height="15"
+      width="5"
+      height="5"
+      position="0 2 0"
+      look-at="[camera]"
       gps-entity-place="latitude: 38.277527; longitude: 26.372800;"
+      gps-error-handler
     ></a-image>
 
     <a-entity
-      gltf-model="url(assets/test.glb)"
-      scale="25 25 25"
+      gltf-model="url: assets/test.glb;"
+      scale="5 5 5"
+      position="0 1.5 0"
       gps-entity-place="latitude: 38.277540; longitude: 26.372614;"
+      shadow="cast: true; receive: true"
+      gps-error-handler
     ></a-entity>
 
   </a-scene>
+  
+  <!-- Konum Bilgisi Göstergesi -->
+  <div id="location-info" style="position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 10px;">
+    Konum Bekleniyor...
+  </div>
+
+  <script>
+    // Gerçek Zamanlı Konum Güncelleme
+    window.addEventListener('gps-camera-update-position', (e) => {
+      document.getElementById('location-info').innerHTML = 
+        `Mevcut Konumunuz:<br>
+        Enlem: ${e.detail.position.latitude.toFixed(7)}<br>
+        Boylam: ${e.detail.position.longitude.toFixed(7)}<br>
+        Hassasiyet: ±${Math.round(e.detail.position.accuracy)}m`;
+    });
+
+    // Yüksek Hassasiyetli GPS İsteği
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => console.log('GPS izni verildi'),
+        (err) => alert(`GPS Hatası: ${err.message}`),
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 5000
+        }
+      );
+    }
+  </script>
 </body>
 </html>
