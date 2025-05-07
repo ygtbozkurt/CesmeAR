@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>AR.js Konum Tabanlı Demo</title>
-  <!-- Güncel Kütüphane Versiyonları -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   
-  <!-- GPS Optimizasyon Scripti -->
   <script>
     AFRAME.registerComponent('gps-error-handler', {
-      init: function() {
+      init() {
         this.el.addEventListener('gps-entity-place-error', (e) => {
-          alert(`GPS Error: ${e.detail.message}`);
+          console.error('GPS Hatası:', e.detail.message);
+          this.el.setAttribute('visible', false);
         });
       }
     });
@@ -25,145 +24,162 @@
           debugUIEnabled: false;
           detectionMode: mono_and_matrix;
           matrixCodeType: 3x3;"
-    renderer="logarithmicDepthBuffer: true; antialias: true;"
+    renderer="logarithmicDepthBuffer: true; antialias: true; precision: medium;"
   >
 
-    <!-- Gelişmiş GPS Kamera Konfigürasyonu -->
     <a-camera 
       gps-camera 
       rotation-reader 
-      gps-min-distance="5"
-      gps-max-distance="1000"
-      gps-error-handler
-      position-min-distance="0.1"
-      position-max-distance="100"
+      gps-min-distance="10"
+      gps-max-distance="500"
+      position-min-distance="2"
+      position-max-distance="50"
     ></a-camera>
 
-    <!-- 3D Modeller için Optimize Edilmiş Yapı -->
-    <a-entity
-      gltf-model="url: assets/test.glb;"
-      scale="5 5 5"
-      position="0 1.5 0"
-      gps-entity-place="latitude: 38.311312; longitude: 26.413585;"
-      animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
-      shadow="cast: true; receive: true"
-    >
-      <a-text 
-        value="3D Model 1" 
-        position="0 3 0"
-        color="#000000"
-        scale="2 2 2"
-      ></a-text>
+    <!-- 3D Model Grupları -->
+    <a-entity gps-entity-place="latitude: 38.311312; longitude: 26.413585;">
+      <a-entity
+        gltf-model="url: assets/test.glb;"
+        scale="8 8 8"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 12000"
+        shadow="cast: true; receive: true"
+      >
+        <a-text 
+          value="ANA NOKTA" 
+          position="0 5 0"
+          color="#FF4500"
+          scale="2.5 2.5 2.5"
+          background="color: white; opacity: 0.8; padding: 0.5"
+        ></a-text>
+      </a-entity>
+    </a-entity>
+    <!-- İşaretleyici Grupları -->
+    <a-entity gps-entity-place="latitude: 38.277411850417565; longitude: 26.372514787821363;">
+      <a-image
+        src="assets/erithrai.png"
+        width="4"
+        height="4"
+        position="0 1.2 0"
+        look-at="[camera]"
+        animation="property: scale; from: 1 1 1; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1500"
+        gps-error-handler
+      >
+        <a-plane
+          color="rgba(255,255,255,0.8)"
+          width="4.2"
+          height="4.2"
+          position="0 0 -0.1"
+        ></a-plane>
+        <a-text 
+          value="ANTİK" 
+          position="0 2.2 0"
+          color="#333"
+          scale="1.3 1.3 1.3"
+        ></a-text>
+      </a-image>
+    </a-entity>
+    <!-- Diğer Konumlar -->
+    <a-entity gps-entity-place="latitude: 38.277418933961286; longitude: 26.372771910657185;">
+      <a-image
+        src="assets/rickMorty.png"
+        width="3.5"
+        height="3.5"
+        position="0 1 0"
+        look-at="[camera]"
+        animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000"
+      >
+        <a-text 
+          value="PORTAL" 
+          position="0 1.8 0"
+          color="#FFFFFF"
+          scale="1.8 1.8 1.8"
+          background="color: #000000; opacity: 0.7"
+        ></a-text>
+      </a-image>
+    </a-entity>
+    <a-entity gps-entity-place="latitude: 38.27815195586835; longitude: 26.372591467111697;">
+      <a-image
+        src="assets/tree.png"
+        width="4"
+        height="4"
+        position="0 0.5 0"
+        look-at="[camera]"
+        animation="property: position; from: 0 0.5 0; to: 0 1 0; dir: alternate; loop: true; dur: 2000"
+      >
+        <a-text 
+          value="AĞAÇ" 
+          position="0 2 0"
+          color="#228B22"
+          scale="1.5 1.5 1.5"
+          background="color: white; opacity: 0.8"
+        ></a-text>
+      </a-image>
     </a-entity>
 
-    <!-- 2D İşaretleyiciler için Gelişmiş Yapı -->
-    <a-image
-      src="assets/rickMorty.png"
-      width="5"
-      height="5"
-      position="0 2 0"
-      look-at="[camera]"
-      gps-entity-place="latitude: 38.311002; longitude: 26.413483;"
-      animation="property: position; from: 0 1 0; to: 0 2.5 0; dir: alternate; loop: true; dur: 2000"
-      gps-error-handler
-    >
-      <a-plane
-        color="rgba(0,150,200,0.3)"
-        width="6"
-        height="6"
-        position="0 -0.5 0"
-      ></a-plane>
-    </a-image>
-
-    <!-- Diğer Konumlar için Benzer Yapılar -->
-    <a-entity
+    <a-entity 
+      gps-entity-place="latitude: 38.276554; longitude: 26.373076;"
       gltf-model="url: assets/test.glb;"
-      scale="5 5 5"
-      position="0 1.5 0"
-      gps-entity-place="latitude: 40.8297; longitude: 29.3135;"
-      shadow="cast: true; receive: true"
-      gps-error-handler
-    >
-    <a-text 
-    value="MODEL" 
-    position="0 3 0"
-    color="#000000"
-    scale="2 2 2"
-  ></a-text>
-  </a-entity>
-
-    <a-image
-      src="assets/rickMorty.png"
-      width="5"
-      height="5"
-      position="0 2 0"
-      look-at="[camera]"
-      gps-entity-place="latitude: 38.277527; longitude: 26.372800;"
-      gps-error-handler
-    >
-    <a-text 
-    value="PORTAL" 
-    position="0 3 0"
-    color="#000000"
-    scale="2 2 2"
-  ></a-text></a-image>
-
-
-</a-entity>
-
-<a-image
-  src="assets/tree.png"
-  width="5"
-  height="5"
-  position="0 2 0"
-  look-at="[camera]"
-  gps-entity-place="latitude: 38.2770791; longitude: 26.3725928;"
-  gps-error-handler
->
-<a-text 
-value="TREE" 
-position="0 3 0"
-color="#000000"
-scale="2 2 2"
-></a-text></a-image>
-
-    <a-entity
-      gltf-model="url: assets/test.glb;"
-      scale="2 2 2"
-      gps-entity-place="latitude: 38.276838; longitude: 26.372852;"
-      shadow="cast: true; receive: true"
-      gps-error-handler
+      scale="10 10 10"
+      rotation="0 45 0"
+      animation="property: position.y; from: 0; to: 0.5; dir: alternate; loop: true; dur: 1500"
     ></a-entity>
 
   </a-scene>
-  
-  <!-- Konum Bilgisi Göstergesi -->
-  <div id="location-info" style="position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 10px;">
-    Konum Bekleniyor...
+
+  <!-- Gelişmiş Konum Paneli -->
+  <div id="ar-panel" style="position: fixed; top: 20px; left: 20px; padding: 15px; background: rgba(0,0,0,0.85); color: #fff; border-radius: 12px; font-family: 'Arial', sans-serif; width: 300px; backdrop-filter: blur(5px);">
+    <div style="font-size: 20px; margin-bottom: 10px; font-weight: bold;">📍 AR Konum Bilgisi</div>
+    <div id="location-details" style="font-size: 14px; line-height: 1.6;">
+      <div style="display: flex; justify-content: space-between;">
+        <span>Enlem:</span>
+        <span id="latitude">-</span>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span>Boylam:</span>
+        <span id="longitude">-</span>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span>Hassasiyet:</span>
+        <span id="accuracy">-</span>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Gerçek Zamanlı Konum Güncelleme
-    window.addEventListener('gps-camera-update-position', (e) => {
-      document.getElementById('location-info').innerHTML = 
-        `Mevcut Konumunuz:<br>
-        Enlem: ${e.detail.position.latitude.toFixed(7)}<br>
-        Boylam: ${e.detail.position.longitude.toFixed(7)}<br>
-        Hassasiyet: ±${Math.round(e.detail.position.accuracy)}m`;
+    let lastUpdate = Date.now();
+    
+    window.addEventListener('gps-camera-update-position', e => {
+      const now = Date.now();
+      if (now - lastUpdate < 2000) return; // 2 saniyede bir güncelle
+      lastUpdate = now;
+
+      const { latitude, longitude, accuracy } = e.detail.position;
+      
+      document.getElementById('latitude').textContent = latitude.toFixed(6);
+      document.getElementById('longitude').textContent = longitude.toFixed(6);
+      document.getElementById('accuracy').textContent = `±${Math.round(accuracy)}m`;
     });
 
-    // Yüksek Hassasiyetli GPS İsteği
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        () => console.log('GPS izni verildi'),
-        (err) => alert(`GPS Hatası: ${err.message}`),
-        {
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: 5000
-        }
-      );
-    }
+    // Konum izni ve takip
+    const initGPS = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          () => console.debug('Konum izni aktif'),
+          err => {
+            console.error('GPS Hatası:', err);
+            document.getElementById('ar-panel').style.backgroundColor = 'rgba(255,0,0,0.2)';
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 3000,
+            timeout: 10000
+          }
+        );
+      }
+    };
+
+    // Sayfa yüklendiğinde başlat
+    window.addEventListener('load', initGPS);
   </script>
 </body>
 </html>
