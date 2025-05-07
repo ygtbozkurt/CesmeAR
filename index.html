@@ -83,7 +83,14 @@
       gps-entity-place="latitude: 40.8297; longitude: 29.3135;"
       shadow="cast: true; receive: true"
       gps-error-handler
-    ></a-entity>
+    >
+    <a-text 
+    value="MODEL" 
+    position="0 3 0"
+    color="#000000"
+    scale="2 2 2"
+  ></a-text>
+  </a-entity>
 
     <a-image
       src="assets/rickMorty.png"
@@ -93,13 +100,37 @@
       look-at="[camera]"
       gps-entity-place="latitude: 38.277527; longitude: 26.372800;"
       gps-error-handler
-    ></a-image>
+    >
+    <a-text 
+    value="PORTAL" 
+    position="0 3 0"
+    color="#000000"
+    scale="2 2 2"
+  ></a-text></a-image>
+
+
+</a-entity>
+
+<a-image
+  src="assets/tree.png"
+  width="5"
+  height="5"
+  position="0 2 0"
+  look-at="[camera]"
+  gps-entity-place="latitude: 38.2770791; longitude: 26.3725928;"
+  gps-error-handler
+>
+<a-text 
+value="PORTAL" 
+position="0 3 0"
+color="#000000"
+scale="2 2 2"
+></a-text></a-image>
 
     <a-entity
       gltf-model="url: assets/test.glb;"
-      scale="5 5 5"
-      position="0 1.5 0"
-      gps-entity-place="latitude: 38.277540; longitude: 26.372614;"
+      scale="25 25 25"
+      gps-entity-place="latitude: 38.276838; longitude: 26.372852;"
       shadow="cast: true; receive: true"
       gps-error-handler
     ></a-entity>
