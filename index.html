@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <title>AR.js Konum Tabanlı Demo</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+
+  <!-- GPS Hata Yakalama Bileşeni -->
   <script>
     AFRAME.registerComponent('gps-error-handler', {
       init() {
@@ -16,74 +17,47 @@
       }
     });
   </script>
+
+  <style>
+    body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+  </style>
 </head>
 <body>
+
+  <!-- A-Frame Sahnesi -->
   <a-scene 
-    vr-mode-ui="enabled: false" 
-    arjs="sourceType: webcam; 
-          debugUIEnabled: false;
-          detectionMode: mono_and_matrix;
-          matrixCodeType: 3x3;"
-    renderer="logarithmicDepthBuffer: true; antialias: true; precision: medium;"
+    embedded
+    vr-mode-ui="enabled: false"
+    arjs="sourceType: webcam; debugUIEnabled: false; gpsMinAccuracy: 100;"
+    renderer="logarithmicDepthBuffer: true; antialias: true;"
   >
 
-    <a-camera 
-      gps-camera 
-      rotation-reader 
-      gps-min-distance="10"
-      gps-max-distance="500"
-      position-min-distance="2"
-      position-max-distance="50"
-    ></a-camera>
+    <!-- Kamera -->
+    <a-camera gps-camera rotation-reader></a-camera>
 
-    <!-- 3D Model Grupları 
-    <a-entity gps-entity-place="latitude: 38.2774095; longitude: 26.3730927;">
-      <a-entity
-        gltf-model="url: assets/test.glb;"
-        scale="8 8 8"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 12000"
-        shadow="cast: true; receive: true"
-      >
-        <a-text 
-          value="Ilıca Bank" 
-          position="0 5 0"
-          color="#FF4500"
-          scale="2.5 2.5 2.5"
-          background="color: white; opacity: 0.8; padding: 0.5"
-        ></a-text>
-      </a-entity>
-    </a-entity>
-    
--->
+    <!-- 3D Model (Konuma Bağlı) -->
     <a-entity 
-      gps-entity-place="latitude: 38.2774095; longitude: 26.3730927;"
-      gltf-model="url: assets/bank.glb;"
+      gps-entity-place="latitude: 38.2775359; longitude: 26.3729827;"
+      gltf-model="url(assets/bank.glb)"
       scale="10 10 10"
-      rotation="0 45 0"
-      animation="property: position.y; from: 0; to: 0.5; dir: alternate; loop: true; dur: 1500"
+      rotation="0 0 0"
+      gps-error-handler
+      animation-mixer
     ></a-entity>
 
   </a-scene>
 
-  <!-- Gelişmiş Konum Paneli -->
-  <div id="ar-panel" style="position: fixed; top: 20px; left: 20px; padding: 15px; background: rgba(0,0,0,0.85); color: #fff; border-radius: 12px; font-family: 'Arial', sans-serif; width: 300px; backdrop-filter: blur(5px);">
+  <!-- Konum Bilgi Paneli -->
+  <div id="ar-panel" style="position: fixed; top: 20px; left: 20px; padding: 15px; background: rgba(0,0,0,0.85); color: #fff; border-radius: 12px; font-family: 'Arial', sans-serif; width: 300px; backdrop-filter: blur(5px); z-index: 10;">
     <div style="font-size: 20px; margin-bottom: 10px; font-weight: bold;">📍 AR Konum Bilgisi</div>
     <div id="location-details" style="font-size: 14px; line-height: 1.6;">
-      <div style="display: flex; justify-content: space-between;">
-        <span>Enlem:</span>
-        <span id="latitude">-</span>
-      </div>
-      <div style="display: flex; justify-content: space-between;">
-        <span>Boylam:</span>
-        <span id="longitude">-</span>
-      </div>
-      <div style="display: flex; justify-content: space-between;">
-        <span>Hassasiyet:</span>
-        <span id="accuracy">-</span>
-      </div>
+      <div style="display: flex; justify-content: space-between;"><span>Enlem:</span><span id="latitude">-</span></div>
+      <div style="display: flex; justify-content: space-between;"><span>Boylam:</span><span id="longitude">-</span></div>
+      <div style="display: flex; justify-content: space-between;"><span>Hassasiyet:</span><span id="accuracy">-</span></div>
     </div>
   </div>
 
+  <!-- GPS Takip ve Konum Güncelleme -->
   <script>
     let lastUpdate = Date.now();
     
@@ -93,20 +67,19 @@
       lastUpdate = now;
 
       const { latitude, longitude, accuracy } = e.detail.position;
-      
       document.getElementById('latitude').textContent = latitude.toFixed(6);
       document.getElementById('longitude').textContent = longitude.toFixed(6);
       document.getElementById('accuracy').textContent = `±${Math.round(accuracy)}m`;
     });
 
-    // Konum izni ve takip
+    // Konum izni kontrolü ve hata göstergesi
     const initGPS = () => {
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition(
           () => console.debug('Konum izni aktif'),
           err => {
             console.error('GPS Hatası:', err);
-            document.getElementById('ar-panel').style.backgroundColor = 'rgba(255,0,0,0.2)';
+            document.getElementById('ar-panel').style.backgroundColor = 'rgba(255,0,0,0.3)';
           },
           {
             enableHighAccuracy: true,
@@ -120,5 +93,6 @@
     // Sayfa yüklendiğinde başlat
     window.addEventListener('load', initGPS);
   </script>
+
 </body>
 </html>
