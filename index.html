@@ -37,7 +37,7 @@
     ></a-camera>
 
     <!-- 3D Model Grupları -->
-    <a-entity gps-entity-place="latitude: 38.311312; longitude: 26.413585;">
+    <a-entity gps-entity-place="latitude: 38.2774095; longitude: 26.3730927;">
       <a-entity
         gltf-model="url: assets/test.glb;"
         scale="8 8 8"
@@ -45,7 +45,7 @@
         shadow="cast: true; receive: true"
       >
         <a-text 
-          value="ANA NOKTA" 
+          value="Ilıca Bank" 
           position="0 5 0"
           color="#FF4500"
           scale="2.5 2.5 2.5"
@@ -53,69 +53,8 @@
         ></a-text>
       </a-entity>
     </a-entity>
-    <!-- İşaretleyici Grupları -->
-    <a-entity gps-entity-place="latitude: 38.277411850417565; longitude: 26.372514787821363;">
-      <a-image
-        src="assets/erithrai.png"
-        width="4"
-        height="4"
-        position="0 1.2 0"
-        look-at="[camera]"
-        animation="property: scale; from: 1 1 1; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1500"
-        gps-error-handler
-      >
-        <a-plane
-          color="rgba(255,255,255,0.8)"
-          width="4.2"
-          height="4.2"
-          position="0 0 -0.1"
-        ></a-plane>
-        <a-text 
-          value="ANTİK" 
-          position="0 2.2 0"
-          color="#333"
-          scale="1.3 1.3 1.3"
-        ></a-text>
-      </a-image>
-    </a-entity>
-    <!-- Diğer Konumlar -->
-    <a-entity gps-entity-place="latitude: 38.277418933961286; longitude: 26.372771910657185;">
-      <a-image
-        src="assets/rickMorty.png"
-        width="3.5"
-        height="3.5"
-        position="0 1 0"
-        look-at="[camera]"
-        animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000"
-      >
-        <a-text 
-          value="PORTAL" 
-          position="0 1.8 0"
-          color="#FFFFFF"
-          scale="1.8 1.8 1.8"
-          background="color: #000000; opacity: 0.7"
-        ></a-text>
-      </a-image>
-    </a-entity>
-    <a-entity gps-entity-place="latitude: 38.27815195586835; longitude: 26.372591467111697;">
-      <a-image
-        src="assets/tree.png"
-        width="4"
-        height="4"
-        position="0 0.5 0"
-        look-at="[camera]"
-        animation="property: position; from: 0 0.5 0; to: 0 1 0; dir: alternate; loop: true; dur: 2000"
-      >
-        <a-text 
-          value="AĞAÇ" 
-          position="0 2 0"
-          color="#228B22"
-          scale="1.5 1.5 1.5"
-          background="color: white; opacity: 0.8"
-        ></a-text>
-      </a-image>
-    </a-entity>
-
+    
+ <!-- 
     <a-entity 
       gps-entity-place="latitude: 38.276554; longitude: 26.373076;"
       gltf-model="url: assets/test.glb;"
@@ -125,7 +64,7 @@
     ></a-entity>
 
   </a-scene>
-
+-->
   <!-- Gelişmiş Konum Paneli -->
   <div id="ar-panel" style="position: fixed; top: 20px; left: 20px; padding: 15px; background: rgba(0,0,0,0.85); color: #fff; border-radius: 12px; font-family: 'Arial', sans-serif; width: 300px; backdrop-filter: blur(5px);">
     <div style="font-size: 20px; margin-bottom: 10px; font-weight: bold;">📍 AR Konum Bilgisi</div>
